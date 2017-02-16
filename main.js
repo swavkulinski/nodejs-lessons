@@ -1,9 +1,18 @@
-var http = require("http");
-var express = require("express");
+var events = require("events");
 
-http.createServer(function (request, response) {
-    response.writeHead(200, {'ContentType':'application/json'});
-    response.end('{"myMock":{"a":1,"b":2}}');
-}).listen(8081);
+var eventEmitter = new events.EventEmitter();
 
-console.log("Server running on http://localhost:8081/");
+var connectHandler = function connected() {
+    console.log('Connected!');
+    eventEmitter.emit('data_received');
+}
+
+eventEmitter.on('connection',connectHandler);
+
+eventEmitter.on('data_received',function(){
+    console.log("Data received!");
+})
+
+eventEmitter.emit('connection');
+
+console.log('Program ended');
