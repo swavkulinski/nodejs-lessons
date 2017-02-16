@@ -1,18 +1,20 @@
-var events = require("events");
+var fs = require("fs");
+var data = '';
 
-var eventEmitter = new events.EventEmitter();
+var readStream = fs.createReadStream('input.txt');
 
-var connectHandler = function connected() {
-    console.log('Connected!');
-    eventEmitter.emit('data_received');
-}
+readStream.setEncoding('UTF8');
 
-eventEmitter.on('connection',connectHandler);
+readStream.on('data', function (chunk){
+    data +=chunk;
+});
 
-eventEmitter.on('data_received',function(){
-    console.log("Data received!");
-})
+readStream.on('end', function(){
+    console.log(data);
+});
 
-eventEmitter.emit('connection');
+readStream.on('error', function(error){
+    console.error(error);
+});
 
 console.log('Program ended');
