@@ -1,19 +1,16 @@
 var fs = require("fs");
-var data = '';
+var data = 'Output content to be written\n';
 
-var readStream = fs.createReadStream('input.txt');
+var writeStream = fs.createWriteStream('input.txt');
 
-readStream.setEncoding('UTF8');
+writeStream.write(data,'UTF8');
+writeStream.end();
 
-readStream.on('data', function (chunk){
-    data +=chunk;
+writeStream.on('finish', function(){
+    console.log('Write completed!');
 });
 
-readStream.on('end', function(){
-    console.log(data);
-});
-
-readStream.on('error', function(error){
+writeStream.on('error', function(error){
     console.error(error);
 });
 
